@@ -10,7 +10,6 @@ from typing import Any, Dict, List, Optional, Union
 
 import oathtool
 from aiohttp import ClientSession, FormData
-from aiohttp.client import DEFAULT_TIMEOUT
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 from graphql import DocumentNode

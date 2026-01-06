@@ -1,13 +1,15 @@
-import os
-
 from setuptools import setup
 
-install_requires = open("requirements.txt", "r").read().split("\n")
+with open("requirements.txt", "r") as f:
+    install_requires = f.read().split("\n")
+
+with open("README.md", "r") as f:
+    long_description = f.read()
 
 setup(
     name="monarchmoney",
     description="Monarch Money API for Python",
-    long_description=open("README.md", "r").read(),
+    long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/hammem/monarchmoney",
     author="hammem",

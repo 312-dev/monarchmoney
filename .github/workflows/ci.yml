@@ -1,29 +1,59 @@
-name: monarchmoney build
+name: CI
 
-on: 
+on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  black:
+  lint:
+    name: Lint (Black)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: lint
+      - uses: actions/checkout@v4
+      - name: Check formatting with Black
         uses: psf/black@stable
-  unit_tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Python 3
-        uses: actions/setup-python@v1
         with:
-          python-version: '3.x'
+          options: "--check --diff"
+
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run tests with unittest
+
+      - name: Run tests
         run: |
-          python -m unittest tests/test_monarchmoney.py
+          python -m unittest discover -s tests -p "test_*.py" -v
+
+  # Ensure all required checks pass before allowing merge
+  ci-success:
+    name: CI Success
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check all jobs passed
+        run: |
+          if [[ "${{ needs.lint.result }}" != "success" || "${{ needs.test.result }}" != "success" ]]; then
+            echo "One or more required jobs failed"
+            exit 1
+          fi
+          echo "All CI checks passed!"

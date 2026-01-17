@@ -69,7 +69,8 @@ class MonarchMoney(object):
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Client-Platform": client_platform,
-            "User-Agent": user_agent or "MonarchMoneyAPI (https://github.com/hammem/monarchmoney)",
+            "User-Agent": user_agent
+            or "MonarchMoneyAPI (https://github.com/hammem/monarchmoney)",
         }
 
         # Add optional headers if provided
@@ -2655,8 +2656,9 @@ class MonarchMoney(object):
                 "You must specify either a category_id OR category_group_id; not both"
             )
 
-        query = gql(
-            """
+        query = (
+            gql(
+                """
           mutation Common_UpdateBudgetItem($input: UpdateOrCreateBudgetItemMutationInput!) {
             updateOrCreateBudgetItem(input: $input) {
               budgetItem {
@@ -2668,8 +2670,10 @@ class MonarchMoney(object):
             }
           }
         """
-        ) if category_id else gql(
-            """
+            )
+            if category_id
+            else gql(
+                """
           mutation Common_UpdateBudgetItem($input: UpdateOrCreateBudgetItemMutationInput!) {
             updateOrCreateBudgetItem(input: $input) {
               budgetItem {
@@ -2681,7 +2685,8 @@ class MonarchMoney(object):
             }
           }
         """
-        ) 
+            )
+        )
 
         variables = {
             "input": {
@@ -2693,7 +2698,7 @@ class MonarchMoney(object):
         }
 
         if category_id:
-            variables["input"]["categoryId"] = category_id 
+            variables["input"]["categoryId"] = category_id
         elif category_group_id:
             variables["input"]["categoryGroupId"] = category_group_id
 
@@ -2725,13 +2730,14 @@ class MonarchMoney(object):
             Whether to apply the new budget amount to all proceeding timeframes
         """
         from datetime import date
+
         if start_date is None:
             today = date.today()
             if today.month == 12:
                 next_month = date(today.year + 1, 1, 1)
             else:
                 next_month = date(today.year, today.month + 1, 1)
-            start_date = next_month.strftime('%Y-%m-%d')
+            start_date = next_month.strftime("%Y-%m-%d")
 
         query = gql(
             """
@@ -2981,7 +2987,7 @@ class MonarchMoney(object):
         Loads pre-existing auth token from a Python pickle file.
         """
         if filename is None:
-                       filename = self._session_file
+            filename = self._session_file
 
         with open(filename, "rb") as fh:
             data = pickle.load(fh)

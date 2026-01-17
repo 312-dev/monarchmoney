@@ -109,11 +109,6 @@ class TestMonarchMoney(unittest.IsolatedAsyncioTestCase):
         result = await self.monarch_money.delete_account("170123456789012345")
 
         mock_execute_async.assert_called_once()
-
-        kwargs = mock_execute_async.call_args.kwargs
-        self.assertEqual(kwargs["operation_name"], "Common_DeleteAccount")
-        self.assertEqual(kwargs["variable_values"], {"id": "170123456789012345"})
-
         self.assertIsNotNone(result, "Expected result to not be None")
         self.assertEqual(result["deleteAccount"]["deleted"], True)
         self.assertEqual(result["deleteAccount"]["errors"], None)

@@ -2810,6 +2810,104 @@ class MonarchMoney(object):
             if resp.status != 200:
                 raise RequestFailedException(f"HTTP Code {resp.status}: {resp.reason}")
 
+    async def get_savings_goals(self) -> Dict[str, Any]:
+        """
+        Gets all savings goals (Monarch Goals) configured in the account.
+
+        Returns goal data including:
+        - id, name, type, status
+        - currentBalance, targetAmount, progress
+        - targetDate, estimatedMonthsUntilCompletion
+        - plannedMonthlyContribution, currentMonthPlannedContributionAmount
+        - Account allocations showing which accounts fund the goal
+        """
+        query = gql("""
+            query Common_SavingsGoals {
+              savingsGoals {
+                ...GoalSummaryFields
+                __typename
+              }
+            }
+
+            fragment NewAccountLogoFields on Account {
+              id
+              dataProvider
+              logoUrl
+              type {
+                name
+                __typename
+              }
+              subtype {
+                name
+                __typename
+              }
+              institution {
+                id
+                logo
+                primaryColor
+                __typename
+              }
+              __typename
+            }
+
+            fragment GoalSummaryFields on SavingsGoal {
+              id
+              type
+              name
+              createdAt
+              archivedAt
+              completedAt
+              imageStorageProvider
+              imageStorageProviderId
+              status
+              progress
+              currentBalance
+              targetDate
+              targetAmount
+              hasFutureBudgetDifferentFromCurrentMonth
+              currentMonthActualBudgetAmount
+              currentMonthPlannedContributionAmount
+              plannedMonthlyContribution
+              spendingTotal
+              netContribution
+              netContributionWithSpending
+              netContributionWithoutSpending
+              balanceThisMonth
+              estimatedMonthsUntilCompletion
+              forecastedCompletionDate
+              isSinkingFund
+              priority
+              allocationAmountsByAccount {
+                goalId
+                totalAmount
+                spendingAmount
+                contributionsAmount
+                withdrawalsAmount
+                account {
+                  icon
+                  displayName
+                  linkedGoal {
+                    id
+                    __typename
+                  }
+                  subtype {
+                    name
+                    display
+                    __typename
+                  }
+                  ...NewAccountLogoFields
+                  __typename
+                }
+                __typename
+              }
+              __typename
+            }
+        """)
+        return await self.gql_call(
+            operation="Common_SavingsGoals",
+            graphql_query=query,
+        )
+
     async def get_recurring_transactions(
         self,
         start_date: Optional[str] = None,

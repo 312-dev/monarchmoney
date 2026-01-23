@@ -2810,6 +2810,260 @@ class MonarchMoney(object):
             if resp.status != 200:
                 raise RequestFailedException(f"HTTP Code {resp.status}: {resp.reason}")
 
+    async def get_user_profile(self) -> Dict[str, Any]:
+        """
+        Gets the current user's profile information.
+
+        Returns:
+            Dict containing user profile with id, name, and email.
+        """
+        query = gql("""
+            query Common_GetMe {
+                me {
+                    id
+                    name
+                    email
+                }
+            }
+        """)
+        return await self.gql_call(
+            operation="Common_GetMe",
+            graphql_query=query,
+        )
+
+    async def get_savings_goal_budgets(
+        self,
+        start_month: str,
+        end_month: str,
+    ) -> Dict[str, Any]:
+        """
+        Gets monthly budget amounts for all savings goals within a date range.
+
+        This returns detailed monthly planning data for goals, including
+        planned and actual contribution amounts by month.
+
+        :param start_month: Start date in YYYY-MM-DD format (first of month)
+        :param end_month: End date in YYYY-MM-DD format (first of month)
+        :return: Dict with savingsGoalMonthlyBudgetAmounts containing goal and monthly data
+        """
+        query = gql("""
+            query GetSavingsGoals($startDate: Date!, $endDate: Date!) {
+                savingsGoalMonthlyBudgetAmounts(startMonth: $startDate, endMonth: $endDate) {
+                    id
+                    savingsGoal {
+                        id
+                        name
+                        type
+                        status
+                        archivedAt
+                        completedAt
+                    }
+                    monthlyAmounts {
+                        month
+                        plannedAmount
+                        actualAmount
+                        remainingAmount
+                    }
+                }
+            }
+        """)
+        return await self.gql_call(
+            operation="GetSavingsGoals",
+            graphql_query=query,
+            variables={"startDate": start_month, "endDate": end_month},
+        )
+
+    async def get_aggregates(
+        self,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        category_ids: Optional[List[str]] = None,
+        account_ids: Optional[List[str]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Gets aggregate spending totals with optional filters.
+
+        Returns summary statistics including total income and expenses
+        for the specified filters.
+
+        :param start_date: Start date in YYYY-MM-DD format
+        :param end_date: End date in YYYY-MM-DD format
+        :param category_ids: Optional list of category IDs to filter by
+        :param account_ids: Optional list of account IDs to filter by
+        :return: Dict with aggregates containing summary (sumExpense, sumIncome)
+        """
+        query = gql("""
+            query GetAggregates($filters: TransactionFilterInput!) {
+                aggregates(filters: $filters) {
+                    summary {
+                        sumExpense
+                        sumIncome
+                    }
+                }
+            }
+        """)
+
+        filters: Dict[str, Any] = {}
+        if start_date:
+            filters["startDate"] = start_date
+        if end_date:
+            filters["endDate"] = end_date
+        if category_ids:
+            filters["categories"] = category_ids
+        if account_ids:
+            filters["accounts"] = account_ids
+
+        return await self.gql_call(
+            operation="GetAggregates",
+            graphql_query=query,
+            variables={"filters": filters},
+        )
+
+    async def update_transaction_category(
+        self,
+        category_id: str,
+        name: Optional[str] = None,
+        icon: Optional[str] = None,
+        group_id: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Updates an existing transaction category's name, icon, or group.
+
+        :param category_id: The ID of the category to update
+        :param name: New name for the category (optional)
+        :param icon: New icon/emoji for the category (optional)
+        :param group_id: New category group ID to move the category to (optional)
+        :return: Dict with updateCategory containing the updated category and any errors
+        """
+        query = gql("""
+            mutation UpdateCategory($input: UpdateCategoryInput!) {
+                updateCategory(input: $input) {
+                    category {
+                        id
+                        name
+                        icon
+                        group {
+                            id
+                            name
+                        }
+                    }
+                    errors {
+                        message
+                        fieldErrors {
+                            field
+                            messages
+                        }
+                    }
+                }
+            }
+        """)
+
+        input_data: Dict[str, Any] = {"id": category_id}
+        if name is not None:
+            input_data["name"] = name
+        if icon is not None:
+            input_data["icon"] = icon
+        if group_id is not None:
+            input_data["groupId"] = group_id
+
+        return await self.gql_call(
+            operation="UpdateCategory",
+            graphql_query=query,
+            variables={"input": input_data},
+        )
+
+    async def get_category_rollover(self, category_id: str) -> Dict[str, Any]:
+        """
+        Gets the rollover settings for a category.
+
+        :param category_id: The ID of the category to get rollover settings for
+        :return: Dict with category containing rolloverPeriod data
+        """
+        query = gql("""
+            query GetCategoryRollover($id: UUID!) {
+                category(id: $id) {
+                    id
+                    name
+                    rolloverPeriod {
+                        id
+                        startMonth
+                        startingBalance
+                        type
+                        frequency
+                        targetAmount
+                    }
+                }
+            }
+        """)
+        return await self.gql_call(
+            operation="GetCategoryRollover",
+            graphql_query=query,
+            variables={"id": category_id},
+        )
+
+    async def update_category_rollover(
+        self,
+        category_id: str,
+        starting_balance: Optional[float] = None,
+        start_month: Optional[str] = None,
+        rollover_type: Optional[str] = None,
+        frequency: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Updates a category's rollover settings.
+
+        Use this to modify the starting balance, start month, or other
+        rollover configuration for a category that already has rollover enabled.
+
+        :param category_id: The ID of the category to update
+        :param starting_balance: New starting balance for rollover calculation
+        :param start_month: New start month in YYYY-MM-DD format
+        :param rollover_type: Rollover type (e.g., "monthly")
+        :param frequency: Rollover frequency (e.g., "monthly")
+        :return: Dict with updateCategory containing the updated category
+        """
+        query = gql("""
+            mutation UpdateCategoryRollover($input: UpdateCategoryInput!) {
+                updateCategory(input: $input) {
+                    category {
+                        id
+                        name
+                        rolloverPeriod {
+                            id
+                            startMonth
+                            startingBalance
+                            type
+                            frequency
+                            targetAmount
+                        }
+                    }
+                    errors {
+                        message
+                        fieldErrors {
+                            field
+                            messages
+                        }
+                    }
+                }
+            }
+        """)
+
+        input_data: Dict[str, Any] = {"id": category_id}
+        if starting_balance is not None:
+            input_data["rolloverStartingBalance"] = starting_balance
+        if start_month is not None:
+            input_data["rolloverStartMonth"] = start_month
+        if rollover_type is not None:
+            input_data["rolloverType"] = rollover_type
+        if frequency is not None:
+            input_data["rolloverFrequency"] = frequency
+
+        return await self.gql_call(
+            operation="UpdateCategoryRollover",
+            graphql_query=query,
+            variables={"input": input_data},
+        )
+
     async def get_savings_goals(self) -> Dict[str, Any]:
         """
         Gets all savings goals (Monarch Goals) configured in the account.

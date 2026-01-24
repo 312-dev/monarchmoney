@@ -1,0 +1,55 @@
+name: Version Bump
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  version-bump:
+    name: Bump Version
+    runs-on: ubuntu-latest
+    # Skip if the commit message contains [skip version] or was made by github-actions
+    if: "!contains(github.event.head_commit.message, '[skip version]') && github.event.head_commit.author.name != 'github-actions[bot]'"
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Bump version
+        id: bump
+        run: |
+          # Extract current version from __init__.py
+          CURRENT_VERSION=$(grep -oP '__version__ = "\K[^"]+' monarchmoney/__init__.py)
+          echo "Current version: $CURRENT_VERSION"
+
+          # Split version into parts
+          IFS='.' read -ra VERSION_PARTS <<< "$CURRENT_VERSION"
+          MAJOR="${VERSION_PARTS[0]}"
+          MINOR="${VERSION_PARTS[1]}"
+          PATCH="${VERSION_PARTS[2]}"
+
+          # Bump patch version
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+          echo "New version: $NEW_VERSION"
+
+          # Update __init__.py
+          sed -i "s/__version__ = \"$CURRENT_VERSION\"/__version__ = \"$NEW_VERSION\"/" monarchmoney/__init__.py
+
+          echo "old_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add monarchmoney/__init__.py
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.new_version }} [skip version]"
+          git push

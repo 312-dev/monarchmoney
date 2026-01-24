@@ -1872,6 +1872,7 @@ class MonarchMoney(object):
         rollover_enabled: bool = False,
         rollover_type: str = "monthly",
         rollover_frequency: str = "monthly",
+        rollover_starting_balance: float = 0,
     ):
         """
         Creates a new transaction category
@@ -1882,6 +1883,7 @@ class MonarchMoney(object):
         :param rollover_enabled: A bool whether the transaction category should be rolled over or not
         :param rollover_type: The budget roll over type
         :param rollover_frequency: The rollover frequency, e.g. "monthly" (default: "monthly")
+        :param rollover_starting_balance: The starting balance for rollover (default: 0)
         """
 
         query = gql("""
@@ -1942,6 +1944,7 @@ class MonarchMoney(object):
                 "rolloverType": rollover_type,
                 "rolloverFrequency": rollover_frequency,
                 "rolloverStartMonth": rollover_start_month.strftime("%Y-%m-%d"),
+                "rolloverStartingBalance": rollover_starting_balance,
             },
         }
 

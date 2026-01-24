@@ -1802,32 +1802,21 @@ class MonarchMoney(object):
         :return: Dict with the updateCategoryGroup result
         """
         query = gql("""
-            mutation Web_UpdateCategoryGroup($input: UpdateCategoryGroupInput!) {
+            mutation Common_UpdateCategoryGroup($input: UpdateCategoryGroupInput!) {
                 updateCategoryGroup(input: $input) {
-                    errors {
-                        fieldErrors {
-                            field
-                            messages
-                            __typename
-                        }
-                        message
-                        code
-                        __typename
-                    }
                     categoryGroup {
                         id
                         name
+                        order
                         type
-                        budgetVariability
+                        color
                         groupLevelBudgetingEnabled
+                        budgetVariability
                         rolloverPeriod {
                             id
                             startMonth
                             endMonth
                             startingBalance
-                            type
-                            frequency
-                            targetAmount
                             __typename
                         }
                         __typename
@@ -1858,7 +1847,7 @@ class MonarchMoney(object):
         variables = {"input": input_data}
 
         return await self.gql_call(
-            operation="Web_UpdateCategoryGroup",
+            operation="Common_UpdateCategoryGroup",
             graphql_query=query,
             variables=variables,
         )

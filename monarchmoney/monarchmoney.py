@@ -1777,6 +1777,92 @@ class MonarchMoney(object):
             operation="ManageGetCategoryGroups", graphql_query=query
         )
 
+    async def update_category_group_settings(
+        self,
+        group_id: str,
+        name: str = None,
+        budget_variability: str = None,
+        group_level_budgeting_enabled: bool = None,
+        rollover_enabled: bool = None,
+        rollover_start_month: str = None,
+        rollover_starting_balance: float = None,
+        rollover_type: str = None,
+    ) -> Dict[str, Any]:
+        """
+        Updates a category group's settings including rollover configuration.
+
+        :param group_id: The ID of the category group to update
+        :param name: Optional new name for the group
+        :param budget_variability: Optional budget type - "fixed" or "flexible"
+        :param group_level_budgeting_enabled: Optional - whether budgets are set at group level
+        :param rollover_enabled: Optional - whether to enable/disable rollover
+        :param rollover_start_month: Optional rollover start month (YYYY-MM-DD format)
+        :param rollover_starting_balance: Optional starting balance for rollover
+        :param rollover_type: Optional rollover type (e.g., "monthly")
+        :return: Dict with the updateCategoryGroup result
+        """
+        query = gql("""
+            mutation Web_UpdateCategoryGroup($input: UpdateCategoryGroupInput!) {
+                updateCategoryGroup(input: $input) {
+                    errors {
+                        fieldErrors {
+                            field
+                            messages
+                            __typename
+                        }
+                        message
+                        code
+                        __typename
+                    }
+                    categoryGroup {
+                        id
+                        name
+                        type
+                        budgetVariability
+                        groupLevelBudgetingEnabled
+                        rolloverPeriod {
+                            id
+                            startMonth
+                            endMonth
+                            startingBalance
+                            type
+                            frequency
+                            targetAmount
+                            __typename
+                        }
+                        __typename
+                    }
+                    __typename
+                }
+            }
+        """)
+
+        # Build input object with only provided fields
+        input_data = {"id": group_id}
+
+        if name is not None:
+            input_data["name"] = name
+        if budget_variability is not None:
+            input_data["budgetVariability"] = budget_variability
+        if group_level_budgeting_enabled is not None:
+            input_data["groupLevelBudgetingEnabled"] = group_level_budgeting_enabled
+        if rollover_enabled is not None:
+            input_data["rolloverEnabled"] = rollover_enabled
+        if rollover_start_month is not None:
+            input_data["rolloverStartMonth"] = rollover_start_month
+        if rollover_starting_balance is not None:
+            input_data["rolloverStartingBalance"] = rollover_starting_balance
+        if rollover_type is not None:
+            input_data["rolloverType"] = rollover_type
+
+        variables = {"input": input_data}
+
+        return await self.gql_call(
+            operation="Web_UpdateCategoryGroup",
+            graphql_query=query,
+            variables=variables,
+        )
+
     async def create_transaction_category(
         self,
         group_id: str,

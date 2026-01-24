@@ -1871,6 +1871,7 @@ class MonarchMoney(object):
         icon: str = "\U00002753",
         rollover_enabled: bool = False,
         rollover_type: str = "monthly",
+        rollover_frequency: str = "monthly",
     ):
         """
         Creates a new transaction category
@@ -1880,6 +1881,7 @@ class MonarchMoney(object):
         :param rollover_start_month: The datetime of the rollover start month
         :param rollover_enabled: A bool whether the transaction category should be rolled over or not
         :param rollover_type: The budget roll over type
+        :param rollover_frequency: The rollover frequency, e.g. "monthly" (default: "monthly")
         """
 
         query = gql("""
@@ -1938,6 +1940,7 @@ class MonarchMoney(object):
                 "icon": icon,
                 "rolloverEnabled": rollover_enabled,
                 "rolloverType": rollover_type,
+                "rolloverFrequency": rollover_frequency,
                 "rolloverStartMonth": rollover_start_month.strftime("%Y-%m-%d"),
             },
         }
@@ -1954,6 +1957,7 @@ class MonarchMoney(object):
         rollover_start_month: datetime = datetime.today().replace(day=1),
         rollover_starting_balance: float = 0,
         rollover_frequency: str = "monthly",
+        rollover_type: str = "monthly",
     ) -> Dict[str, Any]:
         """
         Enables rollover on an existing category.
@@ -1962,6 +1966,7 @@ class MonarchMoney(object):
         :param rollover_start_month: The datetime of the rollover start month (default: first of current month)
         :param rollover_starting_balance: The starting balance for rollover (default: 0)
         :param rollover_frequency: The rollover frequency, e.g. "monthly" (default: "monthly")
+        :param rollover_type: The rollover type, e.g. "monthly" (default: "monthly")
         :return: The updated category data
         """
         query = gql("""
@@ -2026,6 +2031,7 @@ class MonarchMoney(object):
                 "rolloverStartMonth": rollover_start_month.strftime("%Y-%m-%d"),
                 "rolloverStartingBalance": rollover_starting_balance,
                 "rolloverFrequency": rollover_frequency,
+                "rolloverType": rollover_type,
             },
         }
 

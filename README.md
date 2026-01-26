@@ -1,7 +1,7 @@
 # Eclosion
 
 [![PyPI version](https://badge.fury.io/py/monarchmoney.svg)](https://badge.fury.io/py/monarchmoney)
-[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://312-dev.github.io/eclosion/)
+[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://312-dev.github.io/monarchmoney/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Eclosion** is a Python library for programmatic access to [Monarch Money](https://www.monarchmoney.com/referral/ngam2i643l) financial data. It provides a comprehensive async API for managing accounts, transactions, budgets, categories, and more.
@@ -10,7 +10,7 @@
 
 ## Documentation
 
-Full API documentation with interactive examples is available at: **[https://312-dev.github.io/eclosion/](https://312-dev.github.io/eclosion/)**
+Full API documentation with interactive examples is available at: **[https://312-dev.github.io/monarchmoney/](https://312-dev.github.io/monarchmoney/)**
 
 ## Installation
 
@@ -23,8 +23,8 @@ pip install monarchmoney
 ### From Source
 
 ```bash
-git clone https://github.com/312-dev/eclosion.git
-cd eclosion
+git clone https://github.com/312-dev/monarchmoney.git
+cd monarchmoney
 pip install -e .
 ```
 

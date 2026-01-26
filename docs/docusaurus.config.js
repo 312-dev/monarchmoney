@@ -26,10 +26,10 @@ const config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://312-dev.github.io',
-  baseUrl: '/eclosion/',
+  baseUrl: '/monarchmoney/',
 
   organizationName: '312-dev',
-  projectName: 'eclosion',
+  projectName: 'monarchmoney',
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
 
@@ -48,7 +48,7 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/312-dev/eclosion/tree/main/docs/',
+          editUrl: 'https://github.com/312-dev/monarchmoney/tree/main/docs/',
           versions: {
             current: {
               label: `${version} (Current)`,
@@ -93,7 +93,7 @@ const config = {
             dropdownActiveClassDisabled: true,
           },
           {
-            href: 'https://github.com/312-dev/eclosion',
+            href: 'https://github.com/312-dev/monarchmoney',
             label: 'GitHub',
             position: 'right',
           },
@@ -120,11 +120,11 @@ const config = {
             items: [
               {
                 label: 'GitHub Issues',
-                href: 'https://github.com/312-dev/eclosion/issues',
+                href: 'https://github.com/312-dev/monarchmoney/issues',
               },
               {
                 label: 'Discussions',
-                href: 'https://github.com/312-dev/eclosion/discussions',
+                href: 'https://github.com/312-dev/monarchmoney/discussions',
               },
             ],
           },
@@ -133,7 +133,7 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/312-dev/eclosion',
+                href: 'https://github.com/312-dev/monarchmoney',
               },
               {
                 label: 'PyPI',

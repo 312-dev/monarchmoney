@@ -1,0 +1,65 @@
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.quickInstall {
+  background: var(--ifm-background-surface-color);
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.quickInstall h2 {
+  margin-bottom: 1.5rem;
+}
+
+.codeBlock {
+  display: inline-block;
+  background: var(--ifm-code-background);
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.quickExample {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.quickExample h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.quickExample pre {
+  background: var(--ifm-code-background);
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}

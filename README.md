@@ -1,27 +1,36 @@
-# Monarch Money
+# Eclosion
 
-> **Fork Notice:** This is a maintained fork of [hammem/monarchmoney](https://github.com/hammem/monarchmoney) that powers [Eclosion for Monarch](https://github.com/GraysonCAdams/eclosion-for-monarch) — a self-hosted toolkit that expands what's possible with Monarch Money. This fork may include features or fixes not yet available in the upstream repository. For general use, we recommend using the original library.
+[![PyPI version](https://badge.fury.io/py/monarchmoney.svg)](https://badge.fury.io/py/monarchmoney)
+[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://312-dev.github.io/eclosion/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Python library for accessing [Monarch Money](https://www.monarchmoney.com/referral/ngam2i643l) data.
+**Eclosion** is a Python library for programmatic access to [Monarch Money](https://www.monarchmoney.com/referral/ngam2i643l) financial data. It provides a comprehensive async API for managing accounts, transactions, budgets, categories, and more.
 
-# Installation
+> **Attribution:** This library is based on the original work by [hammem](https://github.com/hammem/monarchmoney). It is now maintained by [312.dev](https://github.com/312-dev) and powers the [Eclosion for Monarch](https://github.com/312-dev/eclosion-for-monarch) toolkit.
 
-## From Source Code
+## Documentation
 
-Clone this repository from Git
+Full API documentation with interactive examples is available at: **[https://312-dev.github.io/eclosion/](https://312-dev.github.io/eclosion/)**
 
-`git clone https://github.com/hammem/monarchmoney.git`
+## Installation
 
-## Via `pip`
+### Via pip (Recommended)
 
-`pip install monarchmoney`
-# Instantiate & Login
+```bash
+pip install monarchmoney
+```
 
-There are two ways to use this library: interactive and non-interactive.
+### From Source
 
-## Interactive
+```bash
+git clone https://github.com/312-dev/eclosion.git
+cd eclosion
+pip install -e .
+```
 
-If you're using this library in something like iPython or Jupyter, you can run an interactive-login which supports multi-factor authentication:
+## Quick Start
+
+### Interactive Login (Jupyter/iPython)
 
 ```python
 from monarchmoney import MonarchMoney
@@ -29,137 +38,213 @@ from monarchmoney import MonarchMoney
 mm = MonarchMoney()
 await mm.interactive_login()
 ```
-This will prompt you for the email, password and, if needed, the multi-factor token.
 
-## Non-interactive
+### Programmatic Login
 
-For a non-interactive session, you'll need to create an instance and login:
+```python
+from monarchmoney import MonarchMoney, RequireMFAException
+
+mm = MonarchMoney()
+
+# Simple login
+await mm.login(email, password)
+
+# With MFA handling
+try:
+    await mm.login(email, password)
+except RequireMFAException:
+    await mm.multi_factor_authenticate(email, password, mfa_code)
+```
+
+### Using MFA Secret Key
 
 ```python
 from monarchmoney import MonarchMoney
 
 mm = MonarchMoney()
-await mm.login(email, password)
-```
-
-This may throw a `RequireMFAException`.  If it does, you'll need to get a multi-factor token and call the following method:
-
-```python
-from monarchmoney import MonarchMoney, RequireMFAException
-
-mm = MonarchMoney()
-try:
-        await mm.login(email, password)
-except RequireMFAException:
-        await mm.multi_factor_authenticate(email, password, multi_factor_code)
-```
-
-Alternatively, you can provide the MFA Secret Key. The MFA Secret Key is found when setting up the MFA in Monarch Money by going to Settings -> Security -> Enable MFA -> and copy the "Two-factor text code". Then provide it in the login() method:
-```python
-from monarchmoney import MonarchMoney, RequireMFAException
-
-mm = MonarchMoney()
 await mm.login(
-        email=email,
-        password=password,
-        save_session=False,
-        use_saved_session=False,
-        mfa_secret_key=mfa_secret_key,
-    )
-
+    email=email,
+    password=password,
+    mfa_secret_key=mfa_secret_key,  # From Monarch Security Settings
+)
 ```
 
-# Use a Saved Session
+### Session Persistence
 
-You can easily save your session for use later on.  While we don't know precisely how long a session lasts, authors of this library have found it can last several months.
+Sessions can be saved and reused to avoid repeated logins:
 
 ```python
-from monarchmoney import MonarchMoney, RequireMFAException
+from monarchmoney import MonarchMoney
 
 mm = MonarchMoney()
-mm.interactive_login()
 
-# Save it for later, no more need to login!
+# First time: login and save
+await mm.interactive_login()
 mm.save_session()
-```
 
-Once you've logged in, you can simply load the saved session to pick up where you left off.
-
-```python
-from monarchmoney import MonarchMoney, RequireMFAException
-
+# Later: load saved session
 mm = MonarchMoney()
 mm.load_session()
-
-# Then, start accessing data!
-await mm.get_accounts()
+accounts = await mm.get_accounts()
 ```
 
-# Accessing Data
+## API Overview
 
-As of writing this README, the following methods are supported:
+### Account Operations
 
-## Non-Mutating Methods
+| Method | Description |
+|--------|-------------|
+| `get_accounts()` | Get all linked accounts |
+| `get_account_holdings(account_id)` | Get securities in a brokerage account |
+| `get_account_history(account_id)` | Get historical balance snapshots |
+| `get_account_type_options()` | Get available account types/subtypes |
+| `create_manual_account(...)` | Create a new manual account |
+| `update_account(account_id, ...)` | Update account settings |
+| `delete_account(account_id)` | Delete an account |
+| `request_accounts_refresh(account_ids)` | Trigger account sync |
 
-- `get_accounts` - gets all the accounts linked to Monarch Money
-- `get_account_holdings` - gets all of the securities in a brokerage or similar type of account
-- `get_account_type_options` - all account types and their subtypes available in Monarch Money- 
-- `get_account_history` - gets all daily account history for the specified account
-- `get_institutions` -- gets institutions linked to Monarch Money
-- `get_budgets` — all the budgets and the corresponding actual amounts
-- `get_subscription_details` - gets the Monarch Money account's status (e.g. paid or trial)
-- `get_recurring_transactions` - gets the future recurring transactions, including merchant and account details
-- `get_transactions_summary` - gets the transaction summary data from the transactions page
-- `get_transactions` - gets transaction data, defaults to returning the last 100 transactions; can also be searched by date range
-- `get_transaction_categories` - gets all of the categories configured in the account
-- `get_transaction_category_groups` all category groups configured in the account- 
-- `get_transaction_details` - gets detailed transaction data for a single transaction
-- `get_transaction_splits` - gets transaction splits for a single transaction
-- `get_transaction_tags` - gets all of the tags configured in the account
-- `get_cashflow` - gets cashflow data (by category, category group, merchant and a summary)
-- `get_cashflow_summary` - gets cashflow summary (income, expense, savings, savings rate)
-- `is_accounts_refresh_complete` - gets the status of a running account refresh
+### Transaction Operations
 
-## Mutating Methods
+| Method | Description |
+|--------|-------------|
+| `get_transactions(...)` | Get transactions with filters |
+| `get_transaction_details(transaction_id)` | Get full transaction details |
+| `get_transaction_splits(transaction_id)` | Get split transaction info |
+| `create_transaction(...)` | Create a new transaction |
+| `update_transaction(transaction_id, ...)` | Update a transaction |
+| `delete_transaction(transaction_id)` | Delete a transaction |
+| `update_transaction_splits(...)` | Modify transaction splits |
 
-- `delete_transaction_category` - deletes a category for transactions
-- `delete_transaction_categories` - deletes a list of transaction categories for transactions
-- `create_transaction_category` - creates a category for transactions
-- `request_accounts_refresh` - requests a synchronization / refresh of all accounts linked to Monarch Money. This is a **non-blocking call**. If the user wants to check on the status afterwards, they must call `is_accounts_refresh_complete`.
-- `request_accounts_refresh_and_wait` - requests a synchronization / refresh of all accounts linked to Monarch Money. This is a **blocking call** and will not return until the refresh is complete or no longer running.
-- `create_transaction` - creates a transaction with the given attributes
-- `update_transaction` - modifies one or more attributes for an existing transaction
-- `delete_transaction` - deletes a given transaction by the provided transaction id
-- `update_transaction_splits` - modifies how a transaction is split (or not)
-- `create_transaction_tag` - creates a tag for transactions
-- `set_transaction_tags` - sets the tags on a transaction
-- `set_budget_amount` - sets a budget's value to the given amount (date allowed, will only apply to month specified by default). A zero amount value will "unset" or "clear" the budget for the given category.
-- `create_manual_account` - creates a new manual account
-- `delete_account` - deletes an account by the provided account id
-- `update_account` - updates settings and/or balance of the provided account id
-- `upload_account_balance_history` - uploads account history csv file for a given account
+### Budget & Planning
 
-# Contributing
+| Method | Description |
+|--------|-------------|
+| `get_budgets(start_date, end_date)` | Get budget data |
+| `set_budget_amount(...)` | Set budget for a category |
+| `update_flexible_budget(...)` | Update flexible budget |
+| `get_savings_goals()` | Get all savings goals |
+| `get_savings_goal_budgets(...)` | Get goal monthly budgets |
 
-Any and all contributions -- code, documentation, feature requests, feedback -- are welcome!
+### Categories & Tags
 
-If you plan to submit up a pull request, you can expect a timely review.  There aren't any strict requirements around the environment you'll need.  Please ensure you do the following:
+| Method | Description |
+|--------|-------------|
+| `get_transaction_categories()` | Get all categories |
+| `get_transaction_category_groups()` | Get category groups |
+| `create_transaction_category(...)` | Create a category |
+| `update_transaction_category(...)` | Update a category |
+| `delete_transaction_category(category_id)` | Delete a category |
+| `get_transaction_tags()` | Get all tags |
+| `create_transaction_tag(name, color)` | Create a tag |
+| `set_transaction_tags(...)` | Set tags on a transaction |
 
-  - Configure your IDE or manually run [Black](https://github.com/psf/black) to auto-format the code.
-  - Ensure you run the unit tests in this project!
-    
-Actions are configured in this repo to run against all PRs and merges which will block them if a unit test fails or Black throws an error.
+### Cash Flow & Analytics
 
-# FAQ
+| Method | Description |
+|--------|-------------|
+| `get_cashflow(...)` | Get cashflow by category/merchant |
+| `get_cashflow_summary(...)` | Get income/expense summary |
+| `get_aggregates(...)` | Get aggregate spending totals |
+| `get_transactions_summary()` | Get transaction statistics |
 
-**How do I use this API if I login to Monarch via Google?**
+### Recurring Transactions
 
-If you currently use Google or 'Continue with Google' to access your Monarch account, you'll need to set a password to leverage this API.  You can set a password on your Monarch account by going to your [security settings](https://app.monarchmoney.com/settings/security).  
+| Method | Description |
+|--------|-------------|
+| `get_recurring_transactions(...)` | Get upcoming recurring transactions |
+| `get_all_recurring_transaction_items(...)` | Get all recurring streams |
 
-Don't forget to use a password unique to your Monarch account and to enable multi-factor authentication!
+### Account & User Info
 
-# Projects Using This Library
+| Method | Description |
+|--------|-------------|
+| `get_institutions()` | Get linked institutions |
+| `get_subscription_details()` | Get subscription status |
+| `get_user_profile()` | Get user profile info |
 
-*Disclaimer: These projects are neither affiliated nor endorsed by the `monarchmoney` project.*
+## Advanced Usage
 
-- [monarch-money-amazon-connector](https://github.com/elsell/monarch-money-amazon-connector): Automate annotating and tagging Amazon transactions (ALPHA)
+### Custom Headers
+
+```python
+mm = MonarchMoney(
+    device_uuid="custom-uuid",
+    client_platform="web",
+    monarch_client="my-app",
+    monarch_client_version="1.0.0",
+    user_agent="MyApp/1.0",
+)
+```
+
+### Pre-authenticated Token
+
+```python
+mm = MonarchMoney(token="your-auth-token")
+accounts = await mm.get_accounts()
+```
+
+### Timeout Configuration
+
+```python
+mm = MonarchMoney(timeout=30)  # 30 second timeout
+# Or change later:
+mm.set_timeout(60)
+```
+
+## Error Handling
+
+```python
+from monarchmoney import (
+    MonarchMoney,
+    RequireMFAException,
+    LoginFailedException,
+    RequestFailedException,
+)
+
+mm = MonarchMoney()
+
+try:
+    await mm.login(email, password)
+except RequireMFAException:
+    # MFA is required
+    code = input("Enter MFA code: ")
+    await mm.multi_factor_authenticate(email, password, code)
+except LoginFailedException as e:
+    print(f"Login failed: {e}")
+
+try:
+    await mm.delete_transaction("invalid-id")
+except RequestFailedException as e:
+    print(f"Request failed: {e}")
+```
+
+## Google Login Users
+
+If you use "Continue with Google" to access Monarch Money, you'll need to set a password first:
+
+1. Go to [Monarch Security Settings](https://app.monarchmoney.com/settings/security)
+2. Set a password for your account
+3. Enable MFA for additional security
+
+## Contributing
+
+Contributions are welcome! Please ensure:
+
+1. Code is formatted with [Black](https://github.com/psf/black)
+2. All unit tests pass
+3. New features include appropriate tests
+
+## Related Projects
+
+- [Eclosion for Monarch](https://github.com/312-dev/eclosion-for-monarch) - Self-hosted toolkit powered by this library
+
+*Disclaimer: Projects listed are community-maintained and not affiliated with Monarch Money.*
+
+## Credits
+
+- **Original Author:** [hammem](https://github.com/hammem)
+- **Current Maintainer:** [312.dev](https://github.com/312-dev)
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.

@@ -1,6 +1,6 @@
 {
-  "name": "eclosion-docs",
-  "version": "0.1.16",
+  "name": "monarchmoney-api-docs",
+  "version": "0.1.17",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",

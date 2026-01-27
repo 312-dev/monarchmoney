@@ -4,11 +4,11 @@ sidebar_position: 1
 
 # API Overview
 
-The Eclosion API provides comprehensive access to Monarch Money's functionality through a Python async interface.
+This library provides comprehensive access to Monarch Money's functionality through a Python async interface.
 
 ## Architecture
 
-Eclosion communicates with Monarch Money via their GraphQL API. All API methods are asynchronous and should be called with `await`.
+The library communicates with Monarch Money via their GraphQL API. All API methods are asynchronous and should be called with `await`.
 
 ```python
 from monarchmoney import MonarchMoney

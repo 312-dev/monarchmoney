@@ -9,12 +9,12 @@ sidebar_position: 1
 - Python 3.8 or higher
 - `pip` package manager
 
-## Installing from PyPI
+## Installing from GitHub
 
-The recommended way to install Eclosion is via pip:
+The recommended way to install is via pip from GitHub:
 
 ```bash
-pip install monarchmoney
+pip install git+https://github.com/312-dev/monarchmoney.git
 ```
 
 This will install the `monarchmoney` package along with all required dependencies.
@@ -25,8 +25,8 @@ For development or to get the latest features:
 
 ```bash
 # Clone the repository
-git clone https://github.com/312-dev/eclosion.git
-cd eclosion
+git clone https://github.com/312-dev/monarchmoney.git
+cd monarchmoney
 
 # Install in development mode
 pip install -e .
@@ -34,7 +34,7 @@ pip install -e .
 
 ## Dependencies
 
-Eclosion requires the following packages (automatically installed):
+The library requires the following packages (automatically installed):
 
 | Package | Purpose |
 |---------|---------|
@@ -50,7 +50,7 @@ After installation, verify everything works:
 import asyncio
 from monarchmoney import MonarchMoney
 
-print("Eclosion installed successfully!")
+print("monarchmoney installed successfully!")
 
 # Check version
 import monarchmoney
@@ -62,7 +62,7 @@ print(f"Version: {monarchmoney.__version__}")
 To upgrade to the latest version:
 
 ```bash
-pip install --upgrade monarchmoney
+pip install --upgrade git+https://github.com/312-dev/monarchmoney.git
 ```
 
 ## Troubleshooting
@@ -88,7 +88,7 @@ pip install aiohttp gql[aiohttp] oathtool
 If you encounter permission errors during installation, use `--user` flag:
 
 ```bash
-pip install --user monarchmoney
+pip install --user git+https://github.com/312-dev/monarchmoney.git
 ```
 
 Or use a virtual environment (recommended):
@@ -96,5 +96,5 @@ Or use a virtual environment (recommended):
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install monarchmoney
+pip install git+https://github.com/312-dev/monarchmoney.git
 ```

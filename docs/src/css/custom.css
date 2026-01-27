@@ -1,28 +1,30 @@
 /**
- * Eclosion Documentation Theme
+ * Monarch Money API Documentation Theme
+ * Using Monarch Money's orange color scheme
  */
 
 :root {
-  --ifm-color-primary: #2563eb;
-  --ifm-color-primary-dark: #1d4ed8;
-  --ifm-color-primary-darker: #1e40af;
-  --ifm-color-primary-darkest: #1e3a8a;
-  --ifm-color-primary-light: #3b82f6;
-  --ifm-color-primary-lighter: #60a5fa;
-  --ifm-color-primary-lightest: #93c5fd;
+  /* Monarch Money Orange */
+  --ifm-color-primary: #f97316;
+  --ifm-color-primary-dark: #ea580c;
+  --ifm-color-primary-darker: #dc2626;
+  --ifm-color-primary-darkest: #c2410c;
+  --ifm-color-primary-light: #fb923c;
+  --ifm-color-primary-lighter: #fdba74;
+  --ifm-color-primary-lightest: #fed7aa;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(249, 115, 22, 0.1);
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #60a5fa;
-  --ifm-color-primary-dark: #3b82f6;
-  --ifm-color-primary-darker: #2563eb;
-  --ifm-color-primary-darkest: #1d4ed8;
-  --ifm-color-primary-light: #93c5fd;
-  --ifm-color-primary-lighter: #bfdbfe;
-  --ifm-color-primary-lightest: #dbeafe;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #fb923c;
+  --ifm-color-primary-dark: #f97316;
+  --ifm-color-primary-darker: #ea580c;
+  --ifm-color-primary-darkest: #c2410c;
+  --ifm-color-primary-light: #fdba74;
+  --ifm-color-primary-lighter: #fed7aa;
+  --ifm-color-primary-lightest: #ffedd5;
+  --docusaurus-highlighted-code-line-bg: rgba(249, 115, 22, 0.2);
 }
 
 /* API Tester Styles */
@@ -79,7 +81,7 @@
 .api-tester-field select:focus {
   outline: none;
   border-color: var(--ifm-color-primary);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
 }
 
 .api-tester-button {
@@ -167,7 +169,7 @@
 
 /* Hero Section */
 .hero--primary {
-  background: linear-gradient(135deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary) 100%);
+  background: linear-gradient(135deg, #c2410c 0%, #f97316 50%, #fb923c 100%);
 }
 
 .hero__title {
@@ -190,7 +192,7 @@
 
 .feature-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
 }
 
 /* Code blocks in API docs */
@@ -251,6 +253,14 @@
   color: #9333ea;
 }
 
+/* Unofficial badge in navbar */
+.navbar__title::after {
+  content: ' (Unofficial)';
+  font-size: 0.65em;
+  opacity: 0.7;
+  font-weight: normal;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .api-tester {
@@ -259,5 +269,9 @@
 
   .hero__title {
     font-size: 2rem;
+  }
+
+  .navbar__title::after {
+    content: '';
   }
 }

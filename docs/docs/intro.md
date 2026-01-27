@@ -3,11 +3,13 @@ sidebar_position: 1
 slug: /intro
 ---
 
-# Introduction to Eclosion
+# Introduction
 
-**Eclosion** is a Python library that provides programmatic access to [Monarch Money](https://www.monarchmoney.com/referral/ngam2i643l) financial data. It offers a comprehensive async API for managing accounts, transactions, budgets, categories, and more.
+The **Monarch Money API** is an unofficial Python library that provides programmatic access to [Monarch Money](https://www.monarchmoney.com/referral/ngam2i643l) financial data. It offers a comprehensive async API for managing accounts, transactions, budgets, categories, and more.
 
-## Why Eclosion?
+*This project is not affiliated with, endorsed by, or connected to Monarch Money, Inc.*
+
+## Why Use This Library?
 
 Monarch Money is a powerful personal finance tool, but sometimes you need to:
 
@@ -16,7 +18,7 @@ Monarch Money is a powerful personal finance tool, but sometimes you need to:
 - **Analyze** your spending patterns with custom scripts
 - **Build** applications that interact with your financial data
 
-Eclosion makes all of this possible with a clean, Pythonic API.
+This library makes all of this possible with a clean, Pythonic API.
 
 ## Key Features
 
@@ -89,8 +91,18 @@ await mm.login(
 
 ## Installation
 
+Install directly from GitHub:
+
 ```bash
-pip install monarchmoney
+pip install git+https://github.com/312-dev/monarchmoney.git
+```
+
+Or clone and install locally:
+
+```bash
+git clone https://github.com/312-dev/monarchmoney.git
+cd monarchmoney
+pip install -e .
 ```
 
 ## Quick Start
@@ -118,7 +130,11 @@ asyncio.run(main())
 
 ## Attribution
 
-This library is based on the original work by [hammem](https://github.com/hammem/monarchmoney). It is now maintained by [312.dev](https://github.com/312-dev) and powers the [Eclosion for Monarch](https://github.com/312-dev/eclosion-for-monarch) toolkit.
+This library is based on the original work by [hammem](https://github.com/hammem/monarchmoney). It is now maintained by [312.dev](https://github.com/312-dev).
+
+## Disclaimer
+
+This is an unofficial, community-maintained library. It is not affiliated with, endorsed by, or connected to Monarch Money, Inc. Use at your own risk.
 
 ## Next Steps
 

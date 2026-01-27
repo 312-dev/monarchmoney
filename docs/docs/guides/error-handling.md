@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Error Handling
 
-Eclosion provides specific exception types to help you handle different error scenarios.
+This library provides specific exception types to help you handle different error scenarios.
 
 ## Exception Types
 

@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Authentication
 
-Eclosion provides several ways to authenticate with Monarch Money.
+This library provides several ways to authenticate with Monarch Money.
 
 ## Interactive Login
 

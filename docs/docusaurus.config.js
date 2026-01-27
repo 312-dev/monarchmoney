@@ -21,8 +21,8 @@ try {
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Eclosion',
-  tagline: 'Python API for Monarch Money',
+  title: 'Monarch Money API',
+  tagline: 'Unofficial Python API for Monarch Money',
   favicon: 'img/favicon.ico',
 
   url: 'https://312-dev.github.io',
@@ -67,11 +67,11 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      image: 'img/eclosion-social-card.png',
+      image: 'img/social-card.png',
       navbar: {
-        title: 'Eclosion',
+        title: 'Monarch Money API',
         logo: {
-          alt: 'Eclosion Logo',
+          alt: 'Monarch Money API Logo',
           src: 'img/logo.svg',
         },
         items: [

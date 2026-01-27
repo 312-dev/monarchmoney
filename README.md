@@ -1,23 +1,25 @@
-# Eclosion
+# Monarch Money API (Unofficial)
 
 [![PyPI version](https://badge.fury.io/py/monarchmoney.svg)](https://badge.fury.io/py/monarchmoney)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://312-dev.github.io/monarchmoney/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Eclosion** is a Python library for programmatic access to [Monarch Money](https://www.monarchmoney.com/referral/ngam2i643l) financial data. It provides a comprehensive async API for managing accounts, transactions, budgets, categories, and more.
+An unofficial Python library for programmatic access to [Monarch Money](https://www.monarchmoney.com/referral/ngam2i643l) financial data. This community-maintained fork provides a comprehensive async API for managing accounts, transactions, budgets, categories, and more.
 
-> **Attribution:** This library is based on the original work by [hammem](https://github.com/hammem/monarchmoney). It is now maintained by [312.dev](https://github.com/312-dev) and powers the [Eclosion for Monarch](https://github.com/312-dev/eclosion-for-monarch) toolkit.
+> **Attribution:** This library is based on the original work by [hammem](https://github.com/hammem/monarchmoney). It is now maintained by [312.dev](https://github.com/312-dev).
+
+*This project is not affiliated with, endorsed by, or connected to Monarch Money in any way.*
 
 ## Documentation
 
-Full API documentation with interactive examples is available at: **[https://312-dev.github.io/monarchmoney/](https://312-dev.github.io/monarchmoney/)**
+Full API documentation is available at: **[https://312-dev.github.io/monarchmoney/](https://312-dev.github.io/monarchmoney/)**
 
 ## Installation
 
-### Via pip (Recommended)
+### Via pip from GitHub (Recommended)
 
 ```bash
-pip install monarchmoney
+pip install git+https://github.com/312-dev/monarchmoney.git
 ```
 
 ### From Source
@@ -234,16 +236,14 @@ Contributions are welcome! Please ensure:
 2. All unit tests pass
 3. New features include appropriate tests
 
-## Related Projects
-
-- [Eclosion for Monarch](https://github.com/312-dev/eclosion-for-monarch) - Self-hosted toolkit powered by this library
-
-*Disclaimer: Projects listed are community-maintained and not affiliated with Monarch Money.*
-
 ## Credits
 
 - **Original Author:** [hammem](https://github.com/hammem)
 - **Current Maintainer:** [312.dev](https://github.com/312-dev)
+
+## Disclaimer
+
+This is an unofficial, community-maintained library. It is not affiliated with, endorsed by, or connected to Monarch Money, Inc. Use at your own risk.
 
 ## License
 

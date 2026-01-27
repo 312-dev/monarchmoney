@@ -15,6 +15,6 @@ from .monarchmoney import (
     RequestFailedException,
 )
 
-__version__ = "0.1.19"
+__version__ = "0.1.20"
 __author__ = "hammem"
 __maintainer__ = "312.dev"

@@ -8,7 +8,12 @@ import time
 from datetime import datetime, date, timedelta
 from typing import Any, Dict, List, Optional, Union
 
-import oathtool
+try:
+    import oathtool
+    OATHTOOL_AVAILABLE = True
+except ImportError:
+    OATHTOOL_AVAILABLE = False
+
 from aiohttp import ClientSession, FormData
 from aiohttp.client import DEFAULT_TIMEOUT
 from gql import Client, GraphQLRequest, gql
@@ -3469,6 +3474,11 @@ class MonarchMoney(object):
         }
 
         if mfa_secret_key:
+            if not OATHTOOL_AVAILABLE:
+                raise ImportError(
+                    "oathtool is required for MFA with secret key. "
+                    "Install it with: pip install oathtool"
+                )
             data["totp"] = oathtool.generate_otp(mfa_secret_key)
 
         async with ClientSession(headers=self._headers) as session:

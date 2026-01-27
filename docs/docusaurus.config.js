@@ -135,10 +135,6 @@ const config = {
                 label: 'GitHub',
                 href: 'https://github.com/312-dev/monarchmoney',
               },
-              {
-                label: 'PyPI',
-                href: 'https://pypi.org/project/monarchmoney/',
-              },
             ],
           },
         ],

@@ -1,6 +1,5 @@
 # Monarch Money API (Unofficial)
 
-[![PyPI version](https://badge.fury.io/py/monarchmoney.svg)](https://badge.fury.io/py/monarchmoney)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://312-dev.github.io/monarchmoney/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
